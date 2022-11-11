@@ -46,7 +46,7 @@ export default function Jobs(props: JobsProps) {
     // function to change the selected job. It changes based in the index of the map used to display
     // all the jobs
     function changeSelectedJob(index: number) {
-        setSelectedJob(props.response.jobs[index])
+        setSelectedJob(jobs[index])
     }
 
     // function to filter the jobs by the input. When the input changes, it filters all the jobs by company name.
