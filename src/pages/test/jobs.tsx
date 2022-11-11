@@ -52,7 +52,7 @@ export default function Jobs(props: JobsProps) {
     // function to filter the jobs by the input. When the input changes, it filters all the jobs by company name.
     // Lower case is used to prevent errors from capital letters
     function filterJobs(event: React.ChangeEvent<HTMLInputElement>) {
-        setJobs(props.response.jobs.filter((job: Job) => {
+        setJobs(jobs.filter((job: Job) => {
             return job.companyName.toLowerCase().includes(event.target.value)
         }).slice(0, 10))
     }
@@ -62,7 +62,7 @@ export default function Jobs(props: JobsProps) {
     // It also shows only 10 jobs at once
     function filterJobsLastSevenDays(event: React.FormEvent<HTMLButtonElement>) {
         event.preventDefault()
-        setJobs(props.response.jobs.filter((job: Job) => {
+        setJobs(jobs.filter((job: Job) => {
             const originalPostDate: Date = new Date(job.postingDate)
             const lastWeekDate: Date = new Date()
 
