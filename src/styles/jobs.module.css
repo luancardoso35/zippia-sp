@@ -98,11 +98,12 @@
 .fixedJob {
     top: 142px;
     bottom: 5%;
+    left: calc(34rem + 20%);
     overflow-y:scroll;
     overflow-x:hidden;
     width: 40rem;
     padding: 2rem;
-    flex-grow: 1;
+    position: fixed;
     border: 1px solid #d8dee2;
 }
 
