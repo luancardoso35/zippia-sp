@@ -2,6 +2,8 @@ import { GetServerSideProps } from "next"
 import { useState } from "react";
 import Image from "next/image";
 
+import Head from "next/head";
+
 // the choice to use css modules was made to avoid installing external libraries
 import styles from "../../styles/jobs.module.css"
 
@@ -82,107 +84,114 @@ export default function Jobs(props: JobsProps) {
     }
 
     return (
-        // div that contains all the information of the page
-        <div className={styles.pageContainer}>
+        <div>
+            <Head>
+                <title>Jobs | Zippia</title>
+                <link rel="icon" type="image/x-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQSDMrhxrg7L_0TWNpEi6zNPsXgkpcfEt9907_Q4ck3kps6YupclczxGRFCjjbcrhVhRg&usqp=CAU"></link>
+            </Head>
+        
+        {/* div that contains all the information of the page */}
+            <div className={styles.pageContainer}>
 
-            {/* section that contains the input and the button to filter */}
-            <section className={styles.inputSection}>
-                <input className={styles.inputCompany} onChange={filterJobs} placeholder="Filter by company name" type="text" name="companyName"/>
-                <button onClick={filterJobsLastSevenDays} className={styles.filterButton}>Show jobs published in last 7 days</button>
-            </section>
+                {/* section that contains the input and the button to filter */}
+                <section className={styles.inputSection}>
+                    <input className={styles.inputCompany} onChange={filterJobs} placeholder="Filter by company name" type="text" name="companyName"/>
+                    <button onClick={filterJobsLastSevenDays} className={styles.filterButton}>Show jobs published in last 7 days</button>
+                </section>
 
-            {/* div that contains all the cards in the left and the main card (left card) */}
-            <div className={styles.jobsContainer}>
+                {/* div that contains all the cards in the left and the main card (left card) */}
+                <div className={styles.jobsContainer}>
 
-                {/* 
-                    this section contains all the jobs in the left. It iterates in the jobs array received
-                    by props and make a card for every job. In case there is no jobs, it will display a message telling
-                    that no jobs were found.  
-                */}
-                <section>
-                {
-                    jobs.length === 0
-                    ?
-                    <div className={styles.notFoundError}>
-                        No jobs found.
-                    </div>
-                    :
-                    jobs.map((job: Job, index: number) => {
-                        // this map returns all the info about the job, like the company name, company logo, job title
-                        // the selected job (the one who's in the right card) will have a blue border in the left side
-                        return (
-                            <div 
-                                key={job.jobId} 
-                                className={`${selectedJob.jobId === job.jobId ? styles.selectedJob : styles.cardContainer}`}
-                                onClick={(_) => changeSelectedJob(index)}
-                            >
-                                <img className={styles.companyLogo} src={job.companyLogo} alt="Company logo"/>
-                                <section className={styles.textContainer}>
-                                    <div className={styles.jobTitleMiniCard}>{job.OBJtitle}</div>
-                                    <div className={styles.companyNameMiniCard}>{job.companyName}</div>
-                                    <div className={styles.jobDescriptionMiniCard}>{job.OBJdesc.slice(0, 200) + "..."}</div>
-                                    <div className={styles.addInfo}>
-                                        <span>
-                                            {job.estimatedSalary}
-                                        </span>
-                                        <div>
-                                        {
-                                            checkNewJob(job.postingDate)
-                                            &&
-                                            <span className={styles.newJobSpan}>New {" "}</span>
-                                        }
-                                        <span>{job.postedDate}</span>
+                    {/* 
+                        this section contains all the jobs in the left. It iterates in the jobs array received
+                        by props and make a card for every job. In case there is no jobs, it will display a message telling
+                        that no jobs were found.  
+                    */}
+                    <section>
+                    {
+                        jobs.length === 0
+                        ?
+                        <div className={styles.notFoundError}>
+                            No jobs found.
+                        </div>
+                        :
+                        jobs.map((job: Job, index: number) => {
+                            // this map returns all the info about the job, like the company name, company logo, job title
+                            // the selected job (the one who's in the right card) will have a blue border in the left side
+                            return (
+                                <div 
+                                    key={job.jobId} 
+                                    className={`${selectedJob.jobId === job.jobId ? styles.selectedJob : styles.cardContainer}`}
+                                    onClick={(_) => changeSelectedJob(index)}
+                                >
+                                    <img className={styles.companyLogo} src={job.companyLogo} alt="Company logo"/>
+                                    <section className={styles.textContainer}>
+                                        <div className={styles.jobTitleMiniCard}>{job.OBJtitle}</div>
+                                        <div className={styles.companyNameMiniCard}>{job.companyName}</div>
+                                        <div className={styles.jobDescriptionMiniCard}>{job.OBJdesc.slice(0, 200) + "..."}</div>
+                                        <div className={styles.addInfo}>
+                                            <span>
+                                                {job.estimatedSalary}
+                                            </span>
+                                            <div>
+                                            {
+                                                checkNewJob(job.postingDate)
+                                                &&
+                                                <span className={styles.newJobSpan}>New {" "}</span>
+                                            }
+                                            <span>{job.postedDate}</span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            )
+                        })
+                    }
+
+                    {/* 
+                        this section contains the card on the right, that shows all the text and details from the job. 
+                        It only will be showed in the case there is at least one job in the list at left. When you click at one
+                        job at the left list, it will be displayed in this card.
+                    */}
+                    </section>
+                    {
+                        jobs.length > 0
+                        &&
+                        <div className={styles.fixedJob}>
+                                {/* all the main infos about the job */}
+                                <h1 className={styles.titleFixedCard}>{selectedJob.OBJtitle}</h1>
+                                <h2 className={styles.companyNameFixedCard}>{selectedJob.companyName}</h2>
+                                <h3 className={styles.jobCityFixedCard}>{`${selectedJob.OBJcity}, ${selectedJob.OBJstate}`}</h3>
+                                <h5 className={styles.jobSalaryFixedCard}>{selectedJob.estimatedSalary}</h5>
+
+                                {/* this represents the horizontal line to separate the sections */}
+                                <hr className={styles.hr}/>
+
+                                {/* the section where the highlights are showed, like the city and the level of the job */}
+                                <div className={styles.jobSection}>                                
+                                    <p className={styles.titleFixedCard}>Job Highlights</p>
+                                    <div className={styles.jobHighlights}>
+                                        <div className={styles.jobHighlight}>
+                                            <Image src={mapIcon} alt="Map icon" width={16}/>
+                                            <span>{`${selectedJob.OBJcity}, ${selectedJob.OBJstate}`}</span>
+                                        </div>
+                                        <div className={styles.jobHighlight}>
+                                            <Image src={stairIcon} alt="Map icon" width={24}/>
+                                            <span>{selectedJob.jobLevels.join()}</span>
                                         </div>
                                     </div>
-                                </section>
-                            </div>
-                        )
-                    })
-                }
-
-                {/* 
-                    this section contains the card on the right, that shows all the text and details from the job. 
-                    It only will be showed in the case there is at least one job in the list at left. When you click at one
-                    job at the left list, it will be displayed in this card.
-                */}
-                </section>
-                {
-                    jobs.length > 0
-                    &&
-                    <div className={styles.fixedJob}>
-                            {/* all the main infos about the job */}
-                            <h1 className={styles.titleFixedCard}>{selectedJob.OBJtitle}</h1>
-                            <h2 className={styles.companyNameFixedCard}>{selectedJob.companyName}</h2>
-                            <h3 className={styles.jobCityFixedCard}>{`${selectedJob.OBJcity}, ${selectedJob.OBJstate}`}</h3>
-                            <h5 className={styles.jobSalaryFixedCard}>{selectedJob.estimatedSalary}</h5>
-
-                            {/* this represents the horizontal line to separate the sections */}
-                            <hr className={styles.hr}/>
-
-                            {/* the section where the highlights are showed, like the city and the level of the job */}
-                            <div className={styles.jobSection}>                                
-                                <p className={styles.titleFixedCard}>Job Highlights</p>
-                                <div className={styles.jobHighlights}>
-                                    <div className={styles.jobHighlight}>
-                                        <Image src={mapIcon} alt="Map icon" width={16}/>
-                                        <span>{`${selectedJob.OBJcity}, ${selectedJob.OBJstate}`}</span>
-                                    </div>
-                                    <div className={styles.jobHighlight}>
-                                        <Image src={stairIcon} alt="Map icon" width={24}/>
-                                        <span>{selectedJob.jobLevels.join()}</span>
-                                    </div>
                                 </div>
-                            </div>
 
-                            <hr className={styles.hr}/>
+                                <hr className={styles.hr}/>
 
-                            {/* section that shows the job description */}
-                            <div className={`${styles.jobDescription} ${styles.jobSection}`}>
-                                <p className={styles.titleFixedCard}>Job Description</p>
-                                <p>{selectedJob.OBJdesc}</p>
-                            </div>
-                    </div>
-                }
+                                {/* section that shows the job description */}
+                                <div className={`${styles.jobDescription} ${styles.jobSection}`}>
+                                    <p className={styles.titleFixedCard}>Job Description</p>
+                                    <p>{selectedJob.OBJdesc}</p>
+                                </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     )
